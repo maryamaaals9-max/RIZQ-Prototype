@@ -10,7 +10,12 @@ st.set_page_config(page_title="RIZQ | Climate Retrofit Intelligence", page_icon=
 st.markdown('''<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
 html,body,[class*="css"], [data-testid="stApp"] {font-family:'DM Sans',sans-serif;}
-[data-testid="stAppViewContainer"] {background:#f4f8f6;}
+[data-testid="stAppViewContainer"] {background:#f5f9f7;}
+[data-testid="stHeader"] {background:#ffffffed;}
+[data-testid="stMainBlockContainer"] {padding-top:2rem;}
+[data-testid="stVerticalBlockBorderWrapper"] > div {border-radius:17px;}
+.stButton > button[kind="primary"], [data-testid="stFormSubmitButton"] button[kind="primary"] {background:#167755;border:0;border-radius:12px;font-weight:700;}
+[data-testid="stDataFrame"] {border-radius:14px;overflow:hidden;}
 [data-testid="stSidebar"] {background:#102b34;}
 [data-testid="stSidebar"] * {color:#e7f5ed !important;}
 [data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) {background:#1b5547;border-radius:10px;}
@@ -68,6 +73,9 @@ def assess(b):
     annual_kwh=round(b["kwh"]*12*saving_fraction)
     # Illustrative only: 0.4 kg CO2/kWh; AED 0.30/kWh.
     return dict(score=score,factors=factors,weights=weights,recommendations=recommendations,cost=int(estimated_cost),annual_kwh=annual_kwh,annual_co2_t=round(annual_kwh*.0004,2),annual_aed=round(annual_kwh*.30),saving_pct=round(saving_fraction*100,1))
+
+for _building in st.session_state.buildings:
+    _building["score"] = assess(_building)["score"]
 
 def label(b):return f'{b["id"]} — {b["name"]}'
 def get_building(key):return next(x for x in st.session_state.buildings if x["id"]==key)
